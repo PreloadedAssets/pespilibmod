@@ -769,7 +769,13 @@ do
 		}):Play()
 	end
 	local function colordarktwee(data)
-		local cclr = colors[data[3]]
+		local custom = data[5]
+		local cclr = 
+		if typeof(data[3]) == "table" then
+			cclr = data[1]:GetAttribute(data[3][1])
+		else
+			cclr = colors[data[3]]
+		end
 		local darkness = data[4]
 		data[1][data[2]] = (darkness and darkness ~= 1 and darkenColor(cclr, darkness)) or cclr
 	end
@@ -3906,6 +3912,7 @@ function library:CreateWindow(options, ...)
 			function sectionFunctions:AddLabel(options, ...)
 				options = (options and type(options) == "string" and resolvevararg("Label", options, ...)) or options
 				local labelColor = options.TextColor or options.Color
+				if labelColor then options.TextColor = labelColor end
 				local labelName, flag = options.Text or options.Value or options.Name, options.Flag or (function()
 					library.unnamedlabels = 1 + (library.unnamedlabels or 0)
 					return "Label" .. tostring(library.unnamedlabels)
@@ -3923,6 +3930,7 @@ function library:CreateWindow(options, ...)
 				newLabel.BackgroundTransparency = 1
 				newLabel.Size = UDim2.new(1, 0, 0, 19)
 				labelHeadline.Name = "labelHeadline"
+				if labelColor then labelHeadline:SetAttribute("TextColor", labelColor) end
 				labelHeadline.Parent = newLabel
 				labelHeadline.BackgroundColor3 = Color3.new(1, 1, 1)
 				labelHeadline.BackgroundTransparency = 1
@@ -3930,8 +3938,8 @@ function library:CreateWindow(options, ...)
 				labelHeadline.Size = UDim2.fromOffset(215, 12)
 				labelHeadline.Font = Enum.Font.Code
 				labelHeadline.Text = (labelName and tostring(labelName)) or "Empty Text"
-				labelHeadline.TextColor3 = (labelColor and labelColor) or library.colors.elementText
-				colored[1 + #colored] = {labelHeadline, "TextColor3", "elementText"}
+				labelHeadline.TextColor3 = labelColor or library.colors.elementText
+				colored[1 + #colored] = {labelHeadline, "TextColor3", (labelColor and {"TextColor"} or "elementText")}
 				labelHeadline.TextSize = 14
 				labelHeadline.TextXAlignment = Enum.TextXAlignment.Left
 				labelPositioner.Name = "labelPositioner"
