@@ -770,7 +770,7 @@ do
 	end
 	local function colordarktwee(data)
 		local custom = data[5]
-		local cclr = 
+		local cclr
 		if typeof(data[3]) == "table" then
 			cclr = data[1]:GetAttribute(data[3][1])
 		else
